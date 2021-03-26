@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import yellowpepper.challenge.transfers.client.IExchangeApiFeignClient;
 import yellowpepper.challenge.transfers.constant.BusinessError;
