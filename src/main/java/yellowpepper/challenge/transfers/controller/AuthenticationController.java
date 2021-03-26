@@ -17,6 +17,8 @@ import yellowpepper.challenge.transfers.dto.request.AuthenticateRequestDto;
 import yellowpepper.challenge.transfers.dto.response.AuthenticateResponseDto;
 import yellowpepper.challenge.transfers.util.JwtTokenUtil;
 
+import static io.vavr.API.Try;
+
 @RestController
 @RequestMapping("/authenticate")
 public class AuthenticationController {
@@ -35,7 +37,7 @@ public class AuthenticationController {
 
     @PostMapping
     public ResponseEntity<AuthenticateResponseDto> createAuthenticationToken(
-            @RequestBody AuthenticateRequestDto authenticateRequestDto) throws Exception {
+            @RequestBody AuthenticateRequestDto authenticateRequestDto) {
         authenticate(authenticateRequestDto.getUsername(), authenticateRequestDto.getPassword());
         final UserDetails userDetails = userDetailsService
                 .loadUserByUsername(authenticateRequestDto.getUsername());
@@ -43,13 +45,8 @@ public class AuthenticationController {
         return ResponseEntity.ok(new AuthenticateResponseDto(token));
     }
 
-    private void authenticate(String username, String password) throws Exception {
-        try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-        } catch (DisabledException e) {
-            throw new Exception("USER_DISABLED", e);
-        } catch (BadCredentialsException e) {
-            throw new Exception("INVALID_CREDENTIALS", e);
-        }
+    private void authenticate(String username, String password) {
+        Try(()->authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password)))
+                .toEither().fold(exception-> null, response-> response);
     }
 }
