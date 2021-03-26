@@ -24,7 +24,7 @@ public class TransferController {
         this.transferDelegate = transferDelegate;
     }
 
-    @GetMapping
+    @PostMapping("/movements")
     public ResponseEntity<GetTransfersResponseDto> getTransfers(
             @RequestParam("page") int page,
             @RequestParam("size") int size,
